@@ -26,7 +26,14 @@ NutriBalance is a fully **offline-first** Android app that calculates your perso
 
 ## Screenshots
 
-> _Add your screenshots here_
+<img width="200" height="400" alt="Screenshot_20260609_230252" src="https://github.com/user-attachments/assets/3cf8c66e-b6d4-43e4-8d70-d8592480688c" />
+<img width="200" height="400" alt="Screenshot_20260609_230319" src="https://github.com/user-attachments/assets/dbff6063-1918-4a23-bf64-ff413ec663c8" />
+<img width="200" height="400" alt="Screenshot_20260609_230344" src="https://github.com/user-attachments/assets/df51f525-6508-4c4d-8404-35c9380efbb1" />
+<img width="200" height="400" alt="Screenshot_20260609_230406" src="https://github.com/user-attachments/assets/877a84ad-839b-424c-9ccb-a3ee7c980487" />
+
+
+
+
 
 ---
 
