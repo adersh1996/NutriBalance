@@ -8,5 +8,6 @@ sealed class Screen(val route: String) {
     object MealInput : Screen("meal_input/{mealType}") {
         fun createRoute(mealType: String) = "meal_input/$mealType"
     }
-    object Summary : Screen("summary")
+    object History : Screen("history")
+    object WeightUpdate : Screen("weight_update")
 }

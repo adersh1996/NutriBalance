@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.smad.nutribalance.data.local.dao.MealLogDao
 import com.smad.nutribalance.data.local.dao.UserProfileDao
+import com.smad.nutribalance.data.local.dao.WeightHistoryDao
 import com.smad.nutribalance.data.local.db.NutriDatabase
 import dagger.Module
 import dagger.Provides
@@ -23,7 +24,9 @@ object DatabaseModule {
             context,
             NutriDatabase::class.java,
             "nutri_balance_db"
-        ).build()
+        )
+            .addMigrations(NutriDatabase.MIGRATION_1_2)
+            .build()
     }
 
     @Provides
@@ -33,4 +36,8 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideMealLogDao(db: NutriDatabase): MealLogDao = db.mealLogDao()
+
+    @Provides
+    @Singleton
+    fun provideWeightHistoryDao(db: NutriDatabase): WeightHistoryDao = db.weightHistoryDao()
 }

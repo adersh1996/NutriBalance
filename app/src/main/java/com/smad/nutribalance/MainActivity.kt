@@ -27,6 +27,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        // Check if launched from notification tap
+        val navigateTo = intent?.getStringExtra("navigate_to")
+
         setContent {
             NutriBalanceTheme {
                 // Determine start destination based on onboarding state
@@ -44,7 +48,13 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     true -> {
-                        NutriNavGraph(startDestination = Screen.Dashboard.route)
+                        // If launched from weight reminder notification, go straight to weight update
+                        val startDest = if (navigateTo == "weight_update") {
+                            Screen.WeightUpdate.route
+                        } else {
+                            Screen.Dashboard.route
+                        }
+                        NutriNavGraph(startDestination = startDest)
                     }
                     false -> {
                         NutriNavGraph(startDestination = Screen.Welcome.route)

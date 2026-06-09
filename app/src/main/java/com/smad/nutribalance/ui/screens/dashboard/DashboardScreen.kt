@@ -13,11 +13,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DinnerDining
+import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.LunchDining
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.Button
@@ -99,6 +101,11 @@ fun DashboardScreen(
                 // Summary Card
                 ProfileSummaryCard(profile = profile)
 
+                // Streak Badge
+                if (uiState.streakDays > 0) {
+                    StreakBadge(streak = uiState.streakDays)
+                }
+
                 // Calorie Split Card
                 CalorieSplitCard(profile = profile)
 
@@ -131,6 +138,49 @@ fun DashboardScreen(
                     icon = Icons.Default.DinnerDining,
                     onClick = { onLogMeal(MealType.DINNER.name) }
                 )
+            }
+        }
+    }
+}
+
+@Composable
+fun StreakBadge(streak: Int) {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                Icon(
+                    Icons.Default.LocalFireDepartment,
+                    contentDescription = null,
+                    tint = Orange400,
+                    modifier = Modifier.size(28.dp)
+                )
+                Column {
+                    Text(
+                        text = "🔥 $streak day${if (streak == 1) "" else "s"} streak!",
+                        style = MaterialTheme.typography.titleSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
+                    )
+                    Text(
+                        text = "Keep logging all 3 meals to keep it going!",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.7f)
+                    )
+                }
             }
         }
     }

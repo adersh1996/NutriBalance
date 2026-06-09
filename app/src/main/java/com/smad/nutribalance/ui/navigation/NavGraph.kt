@@ -25,16 +25,17 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.smad.nutribalance.ui.screens.dashboard.DashboardScreen
+import com.smad.nutribalance.ui.screens.history.HistoryScreen
 import com.smad.nutribalance.ui.screens.meal.MealInputScreen
 import com.smad.nutribalance.ui.screens.profile.ProfileScreen
 import com.smad.nutribalance.ui.screens.scale.ScaleCheckScreen
-import com.smad.nutribalance.ui.screens.summary.DailySummaryScreen
 import com.smad.nutribalance.ui.screens.welcome.WelcomeScreen
+import com.smad.nutribalance.ui.screens.weightupdate.WeightUpdateScreen
 
 // Screens that show the bottom navigation bar
 private val screensWithBottomNav = setOf(
     Screen.Dashboard.route,
-    Screen.Summary.route
+    Screen.History.route
 )
 
 @Composable
@@ -64,14 +65,14 @@ fun NutriNavGraph(startDestination: String) {
                         label = { Text("Home", fontWeight = FontWeight.Medium) }
                     )
                     NavigationBarItem(
-                        selected = currentRoute == Screen.Summary.route,
+                        selected = currentRoute == Screen.History.route,
                         onClick = {
-                            navController.navigate(Screen.Summary.route) {
+                            navController.navigate(Screen.History.route) {
                                 launchSingleTop = true
                             }
                         },
-                        icon = { Icon(Icons.Default.History, contentDescription = "Summary") },
-                        label = { Text("Summary", fontWeight = FontWeight.Medium) }
+                        icon = { Icon(Icons.Default.History, contentDescription = "History") },
+                        label = { Text("History", fontWeight = FontWeight.Medium) }
                     )
                 }
             }
@@ -160,8 +161,24 @@ fun NutriNavGraph(startDestination: String) {
                 )
             }
 
-            composable(Screen.Summary.route) {
-                DailySummaryScreen()
+            composable(Screen.History.route) {
+                HistoryScreen(
+                    onNavigateToWeightUpdate = {
+                        navController.navigate(Screen.WeightUpdate.route)
+                    }
+                )
+            }
+
+            composable(Screen.WeightUpdate.route) {
+                WeightUpdateScreen(
+                    onBack = { navController.popBackStack() },
+                    onNavigateToDashboard = {
+                        navController.navigate(Screen.Dashboard.route) {
+                            popUpTo(Screen.Dashboard.route) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }
+                )
             }
         }
     }

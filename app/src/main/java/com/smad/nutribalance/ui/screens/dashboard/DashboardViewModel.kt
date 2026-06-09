@@ -7,6 +7,7 @@ import com.smad.nutribalance.data.repository.UserProfileRepository
 import com.smad.nutribalance.domain.model.MealLog
 import com.smad.nutribalance.domain.model.MealType
 import com.smad.nutribalance.domain.model.UserProfile
+import com.smad.nutribalance.util.StreakCalculator
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,6 +19,7 @@ import javax.inject.Inject
 data class DashboardUiState(
     val userProfile: UserProfile? = null,
     val todaysMeals: List<MealLog> = emptyList(),
+    val streakDays: Int = 0,
     val isLoading: Boolean = true
 )
 
@@ -34,11 +36,13 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             combine(
                 userProfileRepository.userProfile,
-                mealLogRepository.getTodaysMeals()
-            ) { profile, meals ->
+                mealLogRepository.getTodaysMeals(),
+                mealLogRepository.getDatesWithAllMealsLogged()
+            ) { profile, meals, fullLogDates ->
                 DashboardUiState(
                     userProfile = profile,
                     todaysMeals = meals,
+                    streakDays = StreakCalculator.compute(fullLogDates),
                     isLoading = false
                 )
             }.collect { state ->

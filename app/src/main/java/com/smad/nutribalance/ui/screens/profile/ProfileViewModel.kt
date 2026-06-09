@@ -78,7 +78,7 @@ class ProfileViewModel @Inject constructor(
                     ageYears = age,
                     isMale = state.isMale
                 )
-                userProfileRepository.saveProfile(profile)
+                userProfileRepository.saveProfileAndSetupDate(profile)
                 userProfileRepository.setOnboardingComplete(false) // Will complete after scale screen
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,

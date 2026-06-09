@@ -39,12 +39,28 @@ class MealLogRepository @Inject constructor(
         return mealLogDao.getTotalCaloriesForDate(today)
     }
 
-    fun getStreakDays(): Flow<Int> = mealLogDao.getStreakDays()
-
     fun getAllMealLogs(): Flow<List<MealLog>> {
         return mealLogDao.getAllMealLogs().map { entities ->
             entities.map { it.toDomain() }
         }
+    }
+
+    /**
+     * Returns all distinct dates that have at least one meal logged, newest first.
+     */
+    fun getDistinctDates(): Flow<List<String>> = mealLogDao.getDistinctDates()
+
+    /**
+     * Returns dates where ALL 3 meal types were logged (for streak calculation).
+     */
+    fun getDatesWithAllMealsLogged(): Flow<List<String>> = mealLogDao.getDatesWithAllMealsLogged()
+
+    suspend fun getMealsForDateOnce(date: String): List<MealLog> {
+        return mealLogDao.getMealsForDateOnce(date).map { it.toDomain() }
+    }
+
+    suspend fun getTotalCaloriesForDateOnce(date: String): Double {
+        return mealLogDao.getTotalCaloriesForDateOnce(date) ?: 0.0
     }
 
     suspend fun isMealLoggedToday(mealType: MealType): Boolean {

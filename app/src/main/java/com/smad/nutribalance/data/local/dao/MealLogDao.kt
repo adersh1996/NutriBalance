@@ -21,16 +21,8 @@ interface MealLogDao {
     @Query("SELECT SUM(caloriesConsumed) FROM meal_log WHERE date = :date")
     fun getTotalCaloriesForDate(date: String): Flow<Double?>
 
-    @Query("""
-        SELECT COUNT(DISTINCT date) FROM meal_log
-        WHERE date IN (
-            SELECT DISTINCT date FROM meal_log
-            GROUP BY date
-            HAVING COUNT(DISTINCT mealType) >= 3
-        )
-        AND date >= date('now', '-30 days')
-    """)
-    fun getStreakDays(): Flow<Int>
+    @Query("SELECT SUM(caloriesConsumed) FROM meal_log WHERE date = :date")
+    suspend fun getTotalCaloriesForDateOnce(date: String): Double?
 
     @Query("SELECT * FROM meal_log ORDER BY date DESC, timestamp DESC")
     fun getAllMealLogs(): Flow<List<MealLogEntity>>
@@ -41,4 +33,22 @@ interface MealLogDao {
         LIMIT 1
     """)
     suspend fun getMealForDateAndType(date: String, mealType: String): MealLogEntity?
+
+    /**
+     * Returns all distinct dates (yyyy-MM-dd) that have at least one meal log, newest first.
+     */
+    @Query("SELECT DISTINCT date FROM meal_log ORDER BY date DESC")
+    fun getDistinctDates(): Flow<List<String>>
+
+    /**
+     * Returns all distinct dates where ALL 3 meal types were logged on that date.
+     * Used for consecutive-day streak calculation in the ViewModel.
+     */
+    @Query("""
+        SELECT DISTINCT date FROM meal_log
+        GROUP BY date
+        HAVING COUNT(DISTINCT mealType) >= 3
+        ORDER BY date DESC
+    """)
+    fun getDatesWithAllMealsLogged(): Flow<List<String>>
 }
